@@ -62,7 +62,7 @@ export default function UserButton({ user }: UserButtonProps) {
           asChild
           className="px-4 py-2 cursor-pointer"
         >
-          <Link href="/api/auth/signin">Login</Link>
+          <Link href="auth/login">Login</Link>
         </Button>
       )}
     </div>

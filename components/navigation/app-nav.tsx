@@ -5,7 +5,9 @@ import { auth } from "@/server/auth";
 
 export default async function AppNav() {
   const session = await auth();
-
+    console.log("AppNav session:", session);
+    
+    
   return (
     <header className="w-full bg-white shadow-sm px-6 py-3 flex justify-between items-center sticky top-0 z-50">
       <NavLogo />
