@@ -25,9 +25,8 @@ function AuthForm({
   footerHref,
 }: AuthFormProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
       <Card className="w-full shadow-lg rounded-xl overflow-hidden">
-        <CardHeader className="text-center p-6">
+        <CardHeader className="text-center">
           <img
             src={logo.src}
             alt="Logo"
@@ -38,14 +37,13 @@ function AuthForm({
           <CardTitle className="text-2xl font-bold">{formTitle}</CardTitle>
         </CardHeader>
 
-        <CardContent className="p-6">{children}</CardContent>
+        <CardContent>{children}</CardContent>
 
-        <CardFooter className="flex flex-col gap-4 p-6">
+        <CardFooter className="flex flex-col gap-4">
           {showProvider && <ProviderLogin />}
           <AuthFooter footerHref={footerHref} footerLabel={footerLabel} />
         </CardFooter>
       </Card>
-    </div>
   );
 }
 
