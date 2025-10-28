@@ -2,6 +2,7 @@ import { Pencil } from "lucide-react";
 import CustomButton from "@/components/custom-button";
 import { getPosts } from "@/server/actions";
 import Link from "next/link";
+import AppNav from "@/components/navigation/app-nav";
 
 async function HomePage() {
   const { error, success } = await getPosts();
@@ -11,16 +12,15 @@ async function HomePage() {
   }
 
   return (
-    <div className="relative max-w-5xl mx-auto py-12 px-6">
-      <Link href={"/create"}>
-        <CustomButton
+    <div className="min-h-screen bg-gray-50">
+      <AppNav />
+      <div className="relative max-w-5xl mx-auto py-12 px-6">
+        <Link href={"/create"}>
+          <CustomButton
           className="fixed bottom-6 right-6 w-15 h-15 rounded-full shadow-xl hover:scale-110"
           icons={<Pencil className="size-[22px]" />}
         />
       </Link>
-      <div className="flex items-center justify-between mb-10">
-        <h1 className="text-3xl font-bold text-gray-800">📝 Blog List</h1>
-      </div>
 
       {success && success.length > 0 ? (
         <div className="grid md:grid-cols-3 gap-8">
@@ -59,6 +59,7 @@ async function HomePage() {
           No posts found. Start by adding one!
         </div>
       )}
+    </div>
     </div>
   );
 }
