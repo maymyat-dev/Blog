@@ -17,6 +17,10 @@ import { z } from "zod";
 import { registerSchema } from "@/types/register-schema";
 import Link from "next/link";
 
+import { useAction } from "next-safe-action/hooks";
+import { register } from "@/server/actions/register";
+import { cn } from "@/lib/utils";
+
 function RegisterPage() {
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -26,8 +30,14 @@ function RegisterPage() {
       password: "",
     },
   });
+
+  const { execute, status, result } = useAction(register);
   function onSubmit(values: z.infer<typeof registerSchema>) {
-    console.log(values);
+    const { username, email, password } = values;
+
+    execute({ username, email, password });
+    console.log("Register submitted:");
+    console.log({ username, email, password });
   }
 
   return (
@@ -81,8 +91,8 @@ function RegisterPage() {
             <Button variant={"link"} className="ml-auto p-0">
               <Link href={"/auth/forgot-password"}>Forgot Password?</Link>
             </Button>
-          
-          <Button className="w-full mx-auto">Register</Button>
+
+          <Button className={cn("w-full", status === "executing" && "animate-pulse")} type="submit">Register</Button>
           </form>
         </Form>
       </AuthForm>

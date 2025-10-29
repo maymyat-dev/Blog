@@ -16,6 +16,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
+import { login } from "@/server/actions/login";
+import { useAction } from "next-safe-action/hooks";
+import { cn } from "@/lib/utils";
+
 
 function LoginPage() {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -25,8 +29,12 @@ function LoginPage() {
       password: "",
     },
   });
+
+  const { execute, status, result } = useAction(login);
   function onSubmit(values: z.infer<typeof loginSchema>) {
-    console.log(values);
+    const { email, password } = values;
+
+    execute({ email, password });
   }
 
   return (
@@ -68,7 +76,7 @@ function LoginPage() {
              <Button variant={"link"} className="ml-auto p-0">
               <Link href={"/auth/forgot-password"}>Forgot Password?</Link>
             </Button>
-            <Button className="w-full" type="submit">Login</Button>
+            <Button className={cn("w-full", status === "executing" && "animate-pulse")} type="submit">Login</Button>
           </form>
         </Form>
       </AuthForm>
