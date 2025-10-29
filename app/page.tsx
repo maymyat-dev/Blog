@@ -1,6 +1,6 @@
 import { Pencil } from "lucide-react";
 import CustomButton from "@/components/custom-button";
-import { getPosts } from "@/server/actions";
+import { getPosts } from "@/server/actions/post";
 import Link from "next/link";
 import AppNav from "@/components/navigation/app-nav";
 

@@ -1,6 +1,6 @@
 
 import CardForm from '@/components/card-form'
-import { createPost } from '@/server/actions'
+import { createPost } from '@/server/actions/post'
 
 function CreateBlogPage() {
   return (

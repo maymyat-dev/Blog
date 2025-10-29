@@ -1,5 +1,5 @@
 import CustomButton from "@/components/custom-button";
-import { deletePost, getPostById } from "@/server/actions";
+import { deletePost, getPostById } from "@/server/actions/post";
 import Link from "next/link";
 
 type BlogDetailProps = {

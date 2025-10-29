@@ -1,7 +1,7 @@
 "use server"
 import { revalidatePath } from "next/cache";
-import { db } from ".";
-import { blogTable } from "./schema";
+import { db } from "..";
+import { blogTable } from "../schema";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 

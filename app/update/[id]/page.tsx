@@ -1,5 +1,5 @@
 import CardForm from '@/components/card-form'
-import { getPostById, updatePost } from '@/server/actions';
+import { getPostById, updatePost } from '@/server/actions/post';
 
 
 type UpdatePageProps = {
