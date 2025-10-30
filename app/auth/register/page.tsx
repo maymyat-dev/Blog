@@ -20,6 +20,7 @@ import Link from "next/link";
 import { useAction } from "next-safe-action/hooks";
 import { register } from "@/server/actions/register";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 function RegisterPage() {
   const form = useForm<z.infer<typeof registerSchema>>({
@@ -31,13 +32,23 @@ function RegisterPage() {
     },
   });
 
-  const { execute, status, result } = useAction(register);
+  const { execute, status, result } = useAction(register, {
+    onSuccess({data}) {
+      toast.success(data.success, {
+        action: {
+          label: "Open Mail",
+          onClick: () => window.open("https://mail.google.com", "_blank"),
+        }
+      });
+    },
+    onError({ error }) {
+      toast.error(error?.message || "Something went wrong");
+    }
+  });
   function onSubmit(values: z.infer<typeof registerSchema>) {
     const { username, email, password } = values;
-
     execute({ username, email, password });
-    console.log("Register submitted:");
-    console.log({ username, email, password });
+    
   }
 
   return (
@@ -82,7 +93,7 @@ function RegisterPage() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Enter your password" />
+                    <Input {...field} placeholder="Enter your password" type="password" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
