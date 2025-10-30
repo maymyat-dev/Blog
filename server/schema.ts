@@ -8,6 +8,7 @@ import {
   pgEnum,
   boolean
 } from "drizzle-orm/pg-core"
+import { createId } from "@paralleldrive/cuid2"
 import type { AdapterAccountType } from "@auth/core/adapters"
 
 export const RoleEnum = pgEnum("role", ["USER", "ADMIN"])
@@ -21,7 +22,7 @@ export const blogTable = pgTable("blog", {
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .$defaultFn(() => createId()),
   name: text("name"),
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -54,4 +55,19 @@ export const accounts = pgTable(
       }),
     },
   ]
+)
+
+export const emailVerificationToken = pgTable("emailVerificationToken", {
+  id: text("id")
+    .notNull()
+    .$defaultFn(() => createId()),
+  token: text("token").notNull(),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+  email: text("email").notNull(),
+},
+  (vt)=> ({
+    compoundKey: primaryKey({
+      columns: [vt.id, vt.token],
+    }),
+  })
 )

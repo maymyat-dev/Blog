@@ -41,9 +41,6 @@ function RegisterPage() {
         }
       });
     },
-    onError({ error }) {
-      toast.error(error?.message || "Something went wrong");
-    }
   });
   function onSubmit(values: z.infer<typeof registerSchema>) {
     const { username, email, password } = values;
