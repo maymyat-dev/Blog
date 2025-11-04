@@ -57,6 +57,13 @@
       "when": 1761818857681,
       "tag": "0007_cold_dakota_north",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1762288195917,
+      "tag": "0008_marvelous_katie_power",
+      "breakpoints": true
     }
   ]
 }
