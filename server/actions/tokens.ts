@@ -21,7 +21,8 @@ const checkEmailVerificationToken = async (email: string) => {
 
 export const generateEmailVerificationToken = async (email: string) => {
   const token = crypto.randomUUID();
-  const expires = new Date(Date.now() + 1000 * 60 * 15);
+    const expires = new Date(Date.now() + 1000 * 60 * 15);
+    new Date(expires).toLocaleString("en-US", { timeZone: "Asia/Bangkok" });
 
   const existingToken = await checkEmailVerificationToken(email);
 
@@ -37,5 +38,5 @@ export const generateEmailVerificationToken = async (email: string) => {
         expires,
     }).returning();
     
-  return newToken[0]
+    return newToken;
 };

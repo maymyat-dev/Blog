@@ -1,3 +1,4 @@
+
 "use server";
 
 import { actionClient } from "@/server/actions/safe-action";
@@ -7,6 +8,9 @@ import { eq } from "drizzle-orm";
 import { db } from "..";
 import { user } from "../schema";
 import { generateEmailVerificationToken } from "./tokens";
+import { sendEmail } from "./email";
+
+
 
 export const register = actionClient
   .inputSchema(registerSchema)
@@ -20,10 +24,11 @@ export const register = actionClient
     if (existingUser) {
       if (!existingUser.emailVerified) {
         const newToken = await generateEmailVerificationToken(email);
-        console.log("Email verification token:", newToken.token);
+
+          await sendEmail(newToken[0].email, newToken[0].token, username.slice(0, 5));
 
         return {
-          success: "Email verification resent. Please check your inbox.",
+          success: "Email verification link has been resent. Please check your inbox.",
         };
       }
 
@@ -37,7 +42,8 @@ export const register = actionClient
     });
 
     const newToken = await generateEmailVerificationToken(email);
-    console.log("Email verification token:", newToken.token);
+    await sendEmail(newToken[0].email, newToken[0].token, username.slice(0, 5))
+
 
     return {
       success: "Email verification sent. Please check your inbox.",
