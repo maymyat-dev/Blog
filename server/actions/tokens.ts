@@ -5,14 +5,28 @@ import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { db } from "..";
 
-import { emailVerificationToken } from "../schema";
+import { emailVerificationToken, user } from "../schema";
 
-const checkEmailVerificationToken = async (email: string) => {
+const checkEmailVerificationToken = async (email: string | null, token?: string) => {
   try {
-    const token = await db.query.emailVerificationToken.findFirst({
-      where: eq(emailVerificationToken.email, email),
-    });
-    return token;
+    let verificationToken : {
+      email: string;
+      token: string;
+      expires: Date;
+  } | undefined;
+    if (email) {
+      verificationToken = await db.query.emailVerificationToken.findFirst({
+      where: eq(emailVerificationToken.email, email!),
+      });
+      
+    }
+
+    if (token) {
+      verificationToken = await db.query.emailVerificationToken.findFirst({
+        where: eq(emailVerificationToken.token, token),
+      });
+    }
+    return verificationToken;
   } catch (error) {
     console.error("Error checking email verification token:", error);
     return null;
@@ -40,3 +54,29 @@ export const generateEmailVerificationToken = async (email: string) => {
     
     return newToken;
 };
+
+export const confirmEmailWithToken = async (token: string) => {
+  const existingToken = await checkEmailVerificationToken(null, token);
+
+  if(!existingToken) return {
+    error: "Invalid Token"
+  }
+
+  const existingUser = await db.query.user.findFirst({
+    where: eq(user.email, emailVerificationToken.email)
+  })
+
+  if (!existingUser) return {
+    error: "User not Found with this email"
+  }
+
+  await db.update(user).set({
+    emailVerified: new Date(),
+    email: existingUser.email
+  })
+    .where(eq(user.id, existingUser.id));
+  
+  await db.delete(emailVerificationToken).where(eq(emailVerificationToken.id, existingUser.id));
+
+  return { success: "Email Verified"}
+}
