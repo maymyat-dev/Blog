@@ -1,4 +1,3 @@
-
 "use server";
 
 import { actionClient } from "@/server/actions/safe-action";
@@ -9,8 +8,6 @@ import { db } from "..";
 import { user } from "../schema";
 import { generateEmailVerificationToken } from "./tokens";
 import { sendEmail } from "./email";
-
-
 
 export const register = actionClient
   .inputSchema(registerSchema)
@@ -25,10 +22,15 @@ export const register = actionClient
       if (!existingUser.emailVerified) {
         const newToken = await generateEmailVerificationToken(email);
 
-          await sendEmail(newToken[0].email, newToken[0].token, username.slice(0, 5));
+        await sendEmail(
+          newToken[0].email,
+          newToken[0].token,
+          username.slice(0, 5)
+        );
 
         return {
-          success: "Email verification link has been resent. Please check your inbox.",
+          success:
+            "Email verification link has been resent. Please check your inbox.",
         };
       }
 
@@ -42,8 +44,7 @@ export const register = actionClient
     });
 
     const newToken = await generateEmailVerificationToken(email);
-    await sendEmail(newToken[0].email, newToken[0].token, username.slice(0, 5))
-
+    await sendEmail(newToken[0].email, newToken[0].token, username.slice(0, 5));
 
     return {
       success: "Email verification sent. Please check your inbox.",

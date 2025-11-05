@@ -34,12 +34,18 @@ function RegisterPage() {
 
   const { execute, status, result } = useAction(register, {
     onSuccess({data}) {
-      toast.success(data.success, {
+      form.reset();
+      if (data?.error) {
+        toast.error(data?.error)
+      }
+      if (data?.success) {
+        toast.success(data.success, {
         action: {
           label: "Open Mail",
           onClick: () => window.open("https://mail.google.com", "_blank"),
         }
       });
+      }
     },
   });
   function onSubmit(values: z.infer<typeof registerSchema>) {
