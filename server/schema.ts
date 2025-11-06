@@ -24,7 +24,7 @@ export const user = pgTable("user", {
     .primaryKey()
     .$defaultFn(() => createId()),
   name: text("name"),
-  password: text("password").notNull(),
+  password: text("password"),
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),

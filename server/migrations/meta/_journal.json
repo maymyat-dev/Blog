@@ -64,6 +64,13 @@
       "when": 1762288195917,
       "tag": "0008_marvelous_katie_power",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1762459122473,
+      "tag": "0009_previous_kitty_pryde",
+      "breakpoints": true
     }
   ]
 }

@@ -19,13 +19,21 @@ export const register = actionClient
     });
 
     if (existingUser) {
+      if (!existingUser.password) {
+        return {
+          error: "This email is registered via Google/Github. Please use social login.",
+        }
+      }
+
       if (!existingUser.emailVerified) {
         const newToken = await generateEmailVerificationToken(email);
+
+        const displayUsername = username.slice(0, 5);
 
         await sendEmail(
           newToken[0].email,
           newToken[0].token,
-          username.slice(0, 5)
+          displayUsername
         );
 
         return {
