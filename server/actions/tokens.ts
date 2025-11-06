@@ -63,7 +63,7 @@ export const confirmEmailWithToken = async (token: string) => {
   }
 
   const existingUser = await db.query.user.findFirst({
-    where: eq(user.email, emailVerificationToken.email)
+    where: eq(user.email, existingToken.email)
   })
 
   if (!existingUser) return {
@@ -71,12 +71,13 @@ export const confirmEmailWithToken = async (token: string) => {
   }
 
   await db.update(user).set({
-    emailVerified: new Date(),
-    email: existingUser.email
-  })
-    .where(eq(user.id, existingUser.id));
+  emailVerified: new Date(),
+})
+  .where(eq(user.id, existingUser.id));
   
-  await db.delete(emailVerificationToken).where(eq(emailVerificationToken.id, existingUser.id));
+  await db.delete(emailVerificationToken).where(eq(emailVerificationToken.email, existingToken.email));
+  
+
 
   return { success: "Email Verified"}
 }

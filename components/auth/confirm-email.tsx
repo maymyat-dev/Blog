@@ -11,22 +11,30 @@ function ConfirmEmail() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handleConfirmEmail = useCallback(() => {
     if (!token) {
       setError("Invalid token");
+      setLoading(false);
       return;
     }
+    setLoading(true);
     confirmEmailWithToken(token).then((res) => {
       if (res.success) {
         setSuccess(res.success);
-        router.push("/auth/login");
+        setTimeout(() => {
+    router.push("/auth/login"); 
+  }, 2000);
       }
       if (res.error) {
         setError(res.error);
       }
-    });
-  }, []);
+    })
+    .finally(() => { 
+        setLoading(false);
+      });
+  }, [token, router]);
 
   useEffect(() => {
     handleConfirmEmail();

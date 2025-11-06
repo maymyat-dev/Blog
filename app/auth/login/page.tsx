@@ -19,7 +19,7 @@ import Link from "next/link";
 import { login } from "@/server/actions/login";
 import { useAction } from "next-safe-action/hooks";
 import { cn } from "@/lib/utils";
-
+import { toast } from "sonner";
 
 function LoginPage() {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -30,7 +30,17 @@ function LoginPage() {
     },
   });
 
-  const { execute, status, result } = useAction(login);
+  const { execute, status, result } = useAction(login, {
+    onSuccess({ data }) {
+      form.reset();
+      if (data?.error) {
+        toast.error(data?.error);
+      }
+      if (data?.success) {
+        toast.success(data.success);
+      }
+    },
+  });
   function onSubmit(values: z.infer<typeof loginSchema>) {
     const { email, password } = values;
 
@@ -38,49 +48,55 @@ function LoginPage() {
   }
 
   return (
-   
-      <AuthForm
-        formTitle="Login to your account"
-        showProvider={true}
-        footerHref="/auth/register"
-        footerLabel="Don't have an account? Sign up"
-      >
-        <Form {...form} >
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Enter your email" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Enter your password" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <Button variant={"link"} className="ml-auto p-0">
-              <Link href={"/auth/forgot-password"}>Forgot Password?</Link>
-            </Button>
-            <Button className={cn("w-full", status === "executing" && "animate-pulse")} type="submit">Login</Button>
-          </form>
-        </Form>
-      </AuthForm>
-
+    <AuthForm
+      formTitle="Login to your account"
+      showProvider={true}
+      footerHref="/auth/register"
+      footerLabel="Don't have an account? Sign up"
+    >
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-3"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Enter your email" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Enter your password" type="password" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button variant={"link"} className="ml-auto p-0">
+            <Link href={"/auth/forgot-password"}>Forgot Password?</Link>
+          </Button>
+          <Button
+            className={cn("w-full", status === "executing" && "animate-pulse")}
+            type="submit"
+          >
+            Login
+          </Button>
+        </form>
+      </Form>
+    </AuthForm>
   );
 }
 
